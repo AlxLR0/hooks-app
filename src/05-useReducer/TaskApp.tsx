@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -6,27 +6,30 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getTasksInitialState, taskReducer } from './reducer/tasksReducer';
 
-interface Todo {
-  id: number;
-  text: string;
-  completed: boolean;
-}
+// interface Todo {
+//   id: number;
+//   text: string;
+//   completed: boolean;
+// }
 
 export const TasksApp = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState('');
+  // const [todos, setTodos] = useState<Todo[]>([]);
+
+  const [state, dispatch] = useReducer(taskReducer, getTasksInitialState())
+
+  //para guardar en local storage
+  useEffect(()=>{
+    localStorage.setItem('tasks-state',JSON.stringify(state))
+  },[state])
 
   const addTodo = () => {
     if(inputValue.length===0) return;
+    dispatch({type: 'ADD_TODO',payload:inputValue})
 
-    const newTodo: Todo={
-      id:Date.now(),
-      text: inputValue.trim(),
-      completed:false,
-    }
-
-    setTodos([...todos, newTodo]);
+    // setTodos([...todos, newTodo]);
     setInputValue('');//para limpiar la caja de texto
 
     // console.log('Agregar tarea', inputValue);
@@ -34,20 +37,12 @@ export const TasksApp = () => {
   };
 
   const toggleTodo = (id: number) => {
-    const updatedTodos = todos.map(todo =>{
-      if (todo.id === id) {
-        return{...todo, completed: !todo.completed}
-      }
-      return todo;
-    });
-
-    setTodos(updatedTodos);
+    dispatch({type: 'TOGGLE_TODO', payload:id});
 
   };
 
   const deleteTodo = (id: number) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
+    dispatch({type: 'DELETE_TODO', payload:id});
 
   };
 
@@ -57,6 +52,8 @@ export const TasksApp = () => {
     }
 
   };
+
+  const todos = state.todos;
 
   const completedCount = todos.filter((todo) => todo.completed).length;
   const totalCount = todos.length;
