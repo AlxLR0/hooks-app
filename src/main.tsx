@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { Toaster } from 'sonner'
 
-import { InstagromApp } from './07-useOptimistic/InstagromApp'
+import { ProfessionalApp } from './09-useContext/ProfessionalApp'
+// import { InstagromApp } from './07-useOptimistic/InstagromApp'
 // import { MemoCounter } from './06-memos/MemoCounter'
 // import { MemoHook } from './06-memos/MemoHook'
 // import { ScrambleWords } from './05-useReducer/ScrambleWords'
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')!).render(
     {/* <ScrambleWords></ScrambleWords> */}
     {/* <MemoHook></MemoHook> */}
     {/* <MemoCounter></MemoCounter> */}
-    <InstagromApp></InstagromApp>
+    {/* <InstagromApp></InstagromApp> */}
+    <ProfessionalApp></ProfessionalApp>
   </StrictMode>,
 )
